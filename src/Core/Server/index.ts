@@ -67,7 +67,7 @@ export default class HttpServer implements Server {
         }
     }
 
-    private async load(loaders: Loader[]) {
+    private async loading(loaders: Loader[]) {
         this.log(`loading ${loaders.length} loaders`, `Before Start`)
         for (const index in loaders) {
             const loader = loaders[index];
@@ -81,14 +81,14 @@ export default class HttpServer implements Server {
         }
     }
 
-    public before(loader: Loader): this {
+    public load(loader: Loader): this {
         this.loaders.push(loader)
         return this;
     }
 
     public async start() {
         console.clear()
-        await this.load(this.loaders)
+        await this.loading(this.loaders)
             .then(() => console.log())
         this.middlewares(this.config.middlewares);
         this.routes(this.config.routes);
