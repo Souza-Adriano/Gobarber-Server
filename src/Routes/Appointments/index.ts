@@ -28,7 +28,6 @@ const List: Handler = {
     middlewares: [],
     handler: async (request, response) => {
         const resultset = await handler.list();
-
         response.json(resultset)
     }
 }
