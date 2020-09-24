@@ -1,4 +1,4 @@
-import { Route,  Handler} from '../../../Server';
+import { Route,  Handler} from '../../Core/Server';
 
 const Status: Handler = {
     uri: '/status',

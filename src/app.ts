@@ -1,10 +1,15 @@
-import HttpServer from './Server';
-import { Middlewares, Routes } from './Config'
+import HttpServer from './Core/Server';
+import middlewares from './Middlewares/Global';
+import routes from './Routes';
+
+declare global {
+    type Constructor<T extends {} = {}> = new (...args: any[]) => T;
+}
 
 const App = new HttpServer({
     port: 4000,
-    routes: Routes,
-    middlewares: Middlewares,
+    routes,
+    middlewares
 })
 
 App.start()
