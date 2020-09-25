@@ -1,9 +1,11 @@
 import { Route,  Handler} from '../../Core/Server';
-import AppointmentsHandler from '../../Services/Appointments'
-import repository from '../../Repositories/Appointments.repository';
-import generator from '../../Core/Utils/generator.util'
+import { startOfHour, parseISO } from 'date-fns';
+import AppointmentsService from '../../Services/Appointments'
+import AppointmentsRepository from '../../Repositories/Appointments.repository'
+import { getCustomRepository } from 'typeorm'
+import ServiceUtils from '../../Services/service.util'
 
-const handler = new AppointmentsHandler({generator, repository});
+const service = new AppointmentsService()
 
 const Create: Handler = {
     uri: '/',
@@ -12,12 +14,13 @@ const Create: Handler = {
     handler: async (request, response) => {
         try {
             console.log('Create:handler', true)
-            const resultset = await handler.create(request.body);
-
+            const { provider, date } = request.body
+            //const service = getCustomRepository(AppointmentsRepository)
+            const resultset = await service.create({provider, date})
             response.json(resultset)
         } catch (error) {
             console.log(error)
-            response.status(400).send(error.message)
+            response.status(400).json({error: error.message})
         }
     }
 }
@@ -27,8 +30,14 @@ const List: Handler = {
     method: 'GET',
     middlewares: [],
     handler: async (request, response) => {
-        const resultset = await handler.list();
-        response.json(resultset)
+        //const service = getCustomRepository(AppointmentsRepository)
+        try {
+            const resultset = await service.list();
+            response.json(resultset)
+        } catch (error) {
+            console.log(error)
+            response.status(400).json({error: error.message})
+        }
     }
 }
 

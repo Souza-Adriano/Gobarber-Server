@@ -1,29 +1,27 @@
-import { startOfHour, parseISO } from 'date-fns';
-import AppointmentRepository, { Appointment, CreateAppointment, AppointmentRepositoryDependencies } from '../../Repositories/Appointments.repository'
+import { CreateAppointment, ListAppointments, CreateDTO, AppointmentsModel } from './service.model'
+import Create, { CreateAppointmentDependencies } from './Create';
+import List, { ListAppointmentDependencies } from './List';
 
-interface DTOCreate {
-    provider: string;
-    date: string;
+
+interface AppointmentsService extends CreateAppointment, ListAppointments {}
+
+export interface AppointmentsServiceDependencies {
+    create: CreateAppointmentDependencies
+    list: ListAppointmentDependencies
 }
 
-export interface AppointmentsServiceDependencies extends AppointmentRepositoryDependencies {
-    repository: Constructor<AppointmentRepository>;
-}
+// export default class extends Create, List implements AppointmentsService {
+//     constructor(dependencies: AppointmentsServiceDependencies) {
+//         super(dependencies.create);
+//         super(dependencies.list);
+//     }
+// }
 
-export default class AppointmentsService {
-    protected repository: AppointmentRepository;
-
-    constructor(private dependencies: AppointmentsServiceDependencies) {
-        this.repository = new dependencies.repository(dependencies);
+export default class implements AppointmentsService {
+    async create(dto: CreateDTO): Promise<AppointmentsModel> {
+        return await new Create().create(dto)
     }
-
-    public async create(dto: DTOCreate) {
-        const moment = startOfHour(parseISO(dto.date));
-        const result = await this.repository.create({provider: dto.provider, date: moment})
-        return { ...dto, id: result };
-    }
-
-    public async list() {
-        return await this.repository.list();
+    async list(): Promise<AppointmentsModel[]> {
+        return await new List().list()
     }
 }

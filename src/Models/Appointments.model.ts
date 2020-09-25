@@ -1,4 +1,5 @@
 import { Generator } from '../Core/Utils/generator.util'
+import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
 
 export interface Appointment {
     id: string;
@@ -6,18 +7,14 @@ export interface Appointment {
     date: Date;
 }
 
-export interface AppointmentModelDependency {
-    generator: Constructor<Generator>,
-}
+@Entity('appointments')
+export default class AppointmentModel {
+    @PrimaryGeneratedColumn('uuid')
+    id: string
 
-export default class AppointmentModel implements Appointment {
-    public readonly id: string
-    public readonly provider: string
-    public readonly date: Date
+    @Column()
+    provider: string
 
-    constructor(dto: Pick<Appointment, 'date' | 'provider'>, dependencies: AppointmentModelDependency) {
-        this.id = new dependencies.generator().uid();
-        this.provider = dto.provider,
-        this.date = dto.date
-    }
+    @Column()
+    date: Date
 }

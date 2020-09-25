@@ -2,7 +2,7 @@ import HttpServer from './Core/Server';
 import middlewares from './Middlewares/Global';
 import routes from './Routes';
 import Database from  './Loaders/Database.loader';
-
+import { createConnection } from 'typeorm';
 declare global {
     type Constructor<T extends {} = {}> = new (...args: any[]) => T;
 }
