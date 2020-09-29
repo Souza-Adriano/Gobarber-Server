@@ -1,20 +1,40 @@
-import { Generator } from '../Core/Utils/generator.util'
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm'
+import { History } from './Models.model'
+import UserModel from './Users.model'
+import { 
+    Entity,
+    Column,
+    PrimaryGeneratedColumn,
+    CreateDateColumn,
+    UpdateDateColumn,
+    ManyToOne,
+    JoinColumn
+} from 'typeorm'
 
-export interface Appointment {
+export interface Appointment extends History {
     id: string;
-    provider: string;
+    provider_id: string;
+    provider: UserModel;
     date: Date;
 }
 
 @Entity('appointments')
-export default class AppointmentModel {
+export default class AppointmentModel implements Appointment {
     @PrimaryGeneratedColumn('uuid')
     id: string
 
     @Column()
-    provider: string
+    provider_id: string
+
+    @ManyToOne(() => UserModel)
+    @JoinColumn({name: 'provider_id'})
+    provider: UserModel;
 
     @Column()
     date: Date
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    @UpdateDateColumn()
+    updated_at: Date;
 }

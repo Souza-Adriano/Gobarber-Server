@@ -1,7 +1,7 @@
 import AppointmentsModel from '../../Models/Appointments.model'
 
 export interface CreateDTO {
-    provider: string;
+    provider_id: string;
     date: string;
 }
 

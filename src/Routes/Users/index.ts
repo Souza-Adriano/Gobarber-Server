@@ -1,19 +1,19 @@
 import { Route,  Handler} from '../../Core/Server';
-import AppointmentsService from '../../Services/Appointments'
-import authMiddleware from '../../Middlewares/authentication.middleware'
+import UsersService from '../../Services/Users';
 
-const service = new AppointmentsService()
+const service = new UsersService();
+
 const Create: Handler = {
     uri: '/',
     method: 'POST',
-    middlewares: [authMiddleware],
+    middlewares: [],
     handler: async (request, response) => {
         try {
-            console.log('Create:handler', true)
-            const { provider_id, date } = request.body
-            
-            const resultset = await service.create({provider_id, date})
-            response.json(resultset)
+            const serviceResponse = await service.create(request.body);
+            response.json({
+                message: 'User created successfully',
+                content: serviceResponse
+            })
         } catch (error) {
             console.log(error)
             response.status(400).json({error: error.message})
@@ -24,11 +24,14 @@ const Create: Handler = {
 const List: Handler = {
     uri: '/',
     method: 'GET',
-    middlewares: [authMiddleware],
+    middlewares: [],
     handler: async (request, response) => {
         try {
-            const resultset = await service.list();
-            response.json(resultset)
+            const serviceResponse = await service.list();
+            response.json({
+                message: 'User created successfully',
+                content: serviceResponse
+            })
         } catch (error) {
             console.log(error)
             response.status(400).json({error: error.message})
@@ -37,7 +40,7 @@ const List: Handler = {
 }
 
 const route: Route = {
-    root: '/appointments',
+    root: '/users',
     handlers: [ Create, List ]
 }
 
